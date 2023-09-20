@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bpofpm7n0o5js" path="res://wall.tscn" id="2_rl04t"]
 
 [node name="World" type="Node2D"]
+position = Vector2(0, -288)
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -17,7 +18,7 @@ position = Vector2(80, 48)
 position = Vector2(96, 48)
 
 [node name="Wall3" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(112, 32)
+position = Vector2(256, 0)
 
 [node name="Wall4" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(112, 48)
@@ -125,52 +126,76 @@ position = Vector2(400, 272)
 position = Vector2(384, 272)
 
 [node name="Wall43" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(240, 224)
+position = Vector2(256, 224)
 
 [node name="Wall44" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(224, 224)
+position = Vector2(240, 224)
 
 [node name="Wall45" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(208, 224)
+position = Vector2(224, 224)
 
 [node name="Wall46" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(192, 224)
+position = Vector2(208, 224)
 
 [node name="Wall47" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(176, 224)
+position = Vector2(192, 224)
 
 [node name="Wall48" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(160, 224)
+position = Vector2(176, 224)
 
 [node name="Wall49" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(144, 224)
+position = Vector2(160, 224)
 
 [node name="Wall50" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(128, 224)
+position = Vector2(144, 224)
 
 [node name="Wall51" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(368, 176)
+position = Vector2(368, 208)
 
 [node name="Wall52" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(352, 176)
+position = Vector2(352, 208)
 
 [node name="Wall53" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(336, 176)
+position = Vector2(336, 208)
 
 [node name="Wall54" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(320, 176)
+position = Vector2(320, 208)
 
 [node name="Wall55" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(304, 176)
+position = Vector2(304, 208)
 
 [node name="Wall56" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(288, 176)
+position = Vector2(288, 208)
 
 [node name="Wall57" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(272, 176)
+position = Vector2(272, 208)
 
 [node name="Wall58" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(256, 176)
+position = Vector2(256, 208)
+
+[node name="Wall67" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(368, 160)
+
+[node name="Wall68" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(352, 160)
+
+[node name="Wall69" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(336, 160)
+
+[node name="Wall70" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(320, 160)
+
+[node name="Wall71" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(304, 160)
+
+[node name="Wall72" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(288, 160)
+
+[node name="Wall73" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(272, 160)
+
+[node name="Wall74" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(256, 160)
 
 [node name="Wall15" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(0, 80)
@@ -185,4 +210,28 @@ position = Vector2(0, 48)
 position = Vector2(0, 32)
 
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(128, 208)
+position = Vector2(96, 240)
+
+[node name="Wall59" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(240, 176)
+
+[node name="Wall60" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(224, 176)
+
+[node name="Wall61" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(208, 176)
+
+[node name="Wall62" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(192, 176)
+
+[node name="Wall63" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(176, 176)
+
+[node name="Wall64" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(160, 176)
+
+[node name="Wall65" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(144, 176)
+
+[node name="Wall66" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(128, 176)

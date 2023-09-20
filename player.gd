@@ -5,70 +5,82 @@ extends CharacterBody2D
 @onready var fallTime = $FallTime
 @onready var climb_up = $ClimbCheck
 @onready var climb_down = $ClimbDownCheck
+
 var time = 0
 var falling = false
 var jumping = false
 var grid_size = 16
-var inputs = {
-	'ui_up': Vector2.UP,
-	'ui_down': Vector2.DOWN,
-	'ui_left': Vector2.LEFT,
-	'ui_right': Vector2.RIGHT,
-}
-func _process(delta):
-	if !fallTime.is_stopped():
-		print(fallTime.get_time_left())
+var moving = false
+var valid_spacing = [16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320]
+#func _process(delta):
+#	if !fallTime.is_stopped():
+#		print(fallTime.get_time_left())
+#Handles key inputs
+func _physics_process(delta):
 	
-func _unhandled_input(event):
-	for dir in inputs.keys():
-		if event.is_action_pressed(dir):
-			move(dir)
-			fallCheck()
-		
+	if Input.is_action_pressed("ui_up"):
+		move(Vector2(0, -2))
+	elif Input.is_action_pressed("ui_down"):
+		move(Vector2(0, 2))
+	elif Input.is_action_pressed("ui_left"):
+		move(Vector2(-1, 0))
+	elif Input.is_action_pressed("ui_right"):
+		move(Vector2(1, 0))
 
-			
-func fallCheck():
-	if !jumping:
-		ground.force_raycast_update()
-		if !ground.is_colliding():
-			falling = true
-			fallTime.start()
-			position.y += grid_size
-		else:
-			falling = false
-
-# Have we touched the floor?
-func _on_fall_time_timeout():
-	jumping = false
-	fallCheck()
-
-func jumpFunc():
-	print("Jhumping")
-	if climb_up.is_colliding():
-		position.y -= grid_size + grid_size + grid_size
-	else:
-		jumping = true
-		position.y -= grid_size + grid_size
-		fallTime.start()
-
-func crouchFunc():
-	print("Crouching")
-	if climb_down.is_colliding():
-		position.y += grid_size
-	
+#Handles movement
 func move(dir):
-	if inputs[dir].x && !falling:
-		print("shuffle")
-		var vector_pos = inputs[dir] * grid_size
+	if dir && !falling && !moving:
+		moving = true
+		var vector_pos = dir * grid_size
 		ray.target_position = vector_pos
 		ray.force_raycast_update()
-		if !ray.is_colliding():
-			position += vector_pos
-	print(inputs[dir].y)
-	if inputs[dir].y == -1:
-		jumpFunc()
-	if inputs[dir].y == 1:
-		crouchFunc()
-
-
-
+		if climb_up.is_colliding():
+			print(climb_up.get_collision_point().y)
+			print(position.y)
+		if dir.x:
+			if !ray.is_colliding():
+				tweening(position, vector_pos, 0.25)
+			else:
+				print("Can't go here")
+				moving = false
+		elif dir.y and climb_up.is_colliding() && dir.y == -2:
+			
+			vector_pos.y = climb_up.get_collision_point().y
+			print(vector_pos)
+			
+			tweening(position.round(), vector_pos , 0.25)
+		elif dir.y:
+			if !ray.is_colliding():
+				tweening(position, vector_pos, 0.25)
+			else:
+				print("Can't go here")
+				moving = false
+		
+#Handles Tweening
+func tweening(position, vector_pos, duration):
+	var tween = get_tree().create_tween()
+	var destination = position + vector_pos
+	if duration:
+		tween.tween_property(self, "position", destination, duration)
+	else:
+		tween.tween_property(self, "position", destination, 0.25)
+	position = destination
+	tween.tween_callback(shuffleStep)
+	
+#Callback for if moving
+func shuffleStep():
+	floorCheck()
+	moving = false
+#Handles Falling
+func floorCheck():
+	ground.force_raycast_update()
+	if !ground.is_colliding():
+		falling = true
+		var vector_pos = Vector2(0, 1) * grid_size
+		tweening(position, vector_pos, 0.1)
+	else:
+		falling = false
+		jumping = false
+#Timer for falling
+func _on_fall_time_timeout():
+	floorCheck()
