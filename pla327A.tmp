@@ -45,5 +45,5 @@ target_position = Vector2(0, -16)
 position = Vector2(8, 8)
 target_position = Vector2(16, 0)
 
-[connection signal="stance_crouch" from="." to="." method="_on_stance_crouch"]
+[connection signal="crouch_signal" from="." to="." method="_on_crouch_signal"]
 [connection signal="timeout" from="FallTime" to="." method="_on_fall_time_timeout"]
