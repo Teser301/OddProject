@@ -1,11 +1,12 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1695549268
+::res://::1695624397
 collision.gd::GDScript::-1::1695471570::0::1::::<>CollisionShape2D<>::
+debug.gd::GDScript::-1::1695551818::0::1::::<>Button<>::
 icon.svg::CompressedTexture2D::6011554613491323374::1694954701::1694954710::1::::<><>::
-player.gd::GDScript::-1::1695473846::0::1::::<>CharacterBody2D<>::
+player.gd::GDScript::-1::1695582496::0::1::::<>CharacterBody2D<>::
 player.jpg::CompressedTexture2D::8714200441046295352::1694956419::1694956420::1::::<><>::
-player.tscn::PackedScene::3972155211267755419::1695473847::0::1::::<><>::res://player.gd<>uid://dwfhuw75qqahk::::res://player.jpg<>res://collision.gd
+player.tscn::PackedScene::3972155211267755419::1695582496::0::1::::<><>::res://player.gd<>uid://dwfhuw75qqahk::::res://player.jpg<>res://collision.gd
 wall.gd::GDScript::-1::1694959904::0::1::::<>StaticBody2D<>::
 wall.jpg::CompressedTexture2D::8106106074151843444::1694956419::1694956420::1::::<><>::
 wall.tscn::PackedScene::3468485679031426652::1694959755::0::1::::<><>::uid://dnqwnaoulwcam
-world.tscn::PackedScene::7582805165834480444::1695473847::0::1::::<><>::uid://bwue20jxnwc08::::res://player.tscn<>uid://bpofpm7n0o5js::::res://wall.tscn
+world.tscn::PackedScene::7582805165834480444::1695582404::0::1::::<><>::uid://bwue20jxnwc08::::res://player.tscn<>uid://bpofpm7n0o5js::::res://wall.tscn<>res://debug.gd

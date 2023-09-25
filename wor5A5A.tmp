@@ -239,9 +239,9 @@ position = Vector2(112, 208)
 
 [node name="debug" type="Button" parent="."]
 offset_left = 32.0
-offset_top = 48.0
+offset_top = 144.0
 offset_right = 128.0
-offset_bottom = 96.0
+offset_bottom = 192.0
 text = "RESET"
 script = ExtResource("3_khntl")
 
