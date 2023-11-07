@@ -81,14 +81,28 @@ position = Vector2(8, 24)
 target_position = Vector2(16, 0)
 
 [node name="GroundCheck" type="RayCast2D" parent="."]
+visible = false
 position = Vector2(8, 8)
-target_position = Vector2(0, 24)
+target_position = Vector2(0, 32)
+
+[node name="FallTime" type="Timer" parent="."]
+wait_time = 0.25
+one_shot = true
+
+[node name="LeapCheck" type="RayCast2D" parent="."]
+position = Vector2(8, 16)
+target_position = Vector2(64, 0)
 
 [node name="playerCollision" type="CollisionShape2D" parent="."]
 position = Vector2(8, 16)
 shape = SubResource("RectangleShape2D_pb8hu")
 script = ExtResource("3_i2hg4")
 
+[node name="LeapTime" type="Timer" parent="."]
+wait_time = 0.25
+
 [connection signal="stance_crouch" from="." to="." method="_on_stance_crouch"]
 [connection signal="stance_standing" from="." to="." method="_on_stance_standing"]
 [connection signal="stance_turn" from="." to="." method="_on_stance_turn"]
+[connection signal="timeout" from="FallTime" to="." method="_on_fall_time_timeout"]
+[connection signal="timeout" from="LeapTime" to="." method="_on_leap_time_timeout"]

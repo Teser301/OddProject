@@ -1,6 +1,8 @@
+Timer
+AnimationPlayer
+AnimatableBody2D
 RayCast2D
 Button
-Timer
 CollisionShape2D
 StaticBody2D
 CharacterBody2D

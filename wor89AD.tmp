@@ -178,7 +178,7 @@ position = Vector2(96, 240)
 position = Vector2(208, 256)
 
 [node name="Wall60" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(272, 240)
+position = Vector2(240, 176)
 
 [node name="Wall61" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(224, 176)
@@ -202,7 +202,7 @@ position = Vector2(160, 176)
 position = Vector2(400, 240)
 
 [node name="Wall68" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(416, 208)
+position = Vector2(416, 240)
 
 [node name="Wall69" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(384, 240)
@@ -226,16 +226,16 @@ position = Vector2(304, 240)
 position = Vector2(304, 176)
 
 [node name="Wall16" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(192, 208)
+position = Vector2(320, 176)
 
 [node name="Wall17" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(192, 224)
+position = Vector2(336, 176)
 
 [node name="Wall18" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(288, 176)
 
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(144, 208)
+position = Vector2(272, 240)
 
 [node name="debug" type="Button" parent="."]
 offset_left = 32.0
