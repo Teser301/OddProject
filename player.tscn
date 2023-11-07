@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://player.gd" id="1_ap1oi"]
 [ext_resource type="Texture2D" uid="uid://rku5uroy3l25" path="res://Abetest.png" id="2_olj2d"]
-[ext_resource type="Script" path="res://collision.gd" id="3_i2hg4"]
 
 [sub_resource type="Animation" id="Animation_y1p8e"]
 length = 0.001
@@ -44,6 +43,20 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pb8hu"]
 size = Vector2(16, 32)
 
+[sub_resource type="GDScript" id="GDScript_iyrd4"]
+script/source = "extends CollisionShape2D
+
+
+# Called when the node enters the scene tree for the first time.
+
+func _on_character_body_2d_pizza(moving):
+	scale = Vector2(1, 0.5)
+	position += Vector2(0, 8)
+	moving = false
+	print(\"Crouching\")
+	return moving
+"
+
 [node name="PlayerModule" type="CharacterBody2D"]
 script = ExtResource("1_ap1oi")
 
@@ -69,25 +82,28 @@ position = Vector2(8, 8)
 target_position = Vector2(0, -32)
 
 [node name="CrouchClimb" type="RayCast2D" parent="."]
+visible = false
 position = Vector2(8, 24)
 target_position = Vector2(0, -16)
 
 [node name="HeadCheck" type="RayCast2D" parent="."]
+visible = false
 position = Vector2(8, 8)
 target_position = Vector2(16, 0)
 
 [node name="LegCheck" type="RayCast2D" parent="."]
+visible = false
 position = Vector2(8, 24)
 target_position = Vector2(16, 0)
 
 [node name="GroundCheck" type="RayCast2D" parent="."]
-position = Vector2(8, 8)
-target_position = Vector2(0, 24)
+position = Vector2(8, 24)
+target_position = Vector2(0, 8)
 
 [node name="playerCollision" type="CollisionShape2D" parent="."]
 position = Vector2(8, 16)
 shape = SubResource("RectangleShape2D_pb8hu")
-script = ExtResource("3_i2hg4")
+script = SubResource("GDScript_iyrd4")
 
 [connection signal="stance_crouch" from="." to="." method="_on_stance_crouch"]
 [connection signal="stance_standing" from="." to="." method="_on_stance_standing"]

@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name PlayerController
 
 @onready var climb_up_short = $ClimbCheck2
 @onready var climb_up = $ClimbCheck
@@ -40,8 +41,7 @@ func input():
 		move(Vector2(1, 0))
 	elif Input.is_action_just_pressed("move_leap"):
 		leap()
-
-		
+	
 func leap():
 	if !falling && !moving && !jumping:
 		jumping = true
@@ -54,7 +54,9 @@ func leap():
 # Handles movement
 
 func leapCycle(i):
-	var tween = create_tween()
+	var tween
+	if i <= 2:
+		tween = create_tween()
 	var vector_pos = headray.target_position
 	var destination = position + vector_pos
 	if headray.is_colliding() or legray.is_colliding():
@@ -78,19 +80,15 @@ func leapCycle(i):
 	else:
 		jumping = false
 		floorCheck()
-		
-func _on_leap_time_timeout():
-	print('Times up')
-	
-	
+
 func move(dir):
 	if dir && !falling && !moving :
 		moving = true
 		var vector_pos = dir * grid_size
 		# If input is Left or Right
-		if dir.x:
+		if dir.x && !ledge_status:
 			# Make the raycast arrow follow where player is facing
-			if headray.target_position != vector_pos:
+			if headray.target_position != vector_pos :
 				turning = true
 				_on_stance_turn(vector_pos, dir)
 				return
@@ -98,7 +96,7 @@ func move(dir):
 			headray.force_raycast_update()
 			legray.force_raycast_update()
 			# Basic movement
-			if !headray.is_colliding() && !legray.is_colliding()  && !turning:
+			if !headray.is_colliding() && !legray.is_colliding()  && !turning && !ledge_status:
 				tweening(position, vector_pos, 0.25)
 				
 				$Player/PlayerAnim.play("walk")
@@ -123,18 +121,22 @@ func move(dir):
 				ledge_status = false
 				vector_pos.y -= grid_size * 2
 				tweening(position.round(), vector_pos , 0.25)
+			elif ledge_status && dir.y == 1:
+				ledge_status = false
+				falling = true
+				floorCheck()
+			# Climbing short ledge
 			elif climb_up_short.is_colliding() && !ledge_status && !crouching && dir.y == -1 :
 				ledge_status = true
 				moving = false
+			# Climbing
 			elif climb_up.is_colliding() && !ledge_status && !crouching && dir.y == -1:
 				ledge_status = true
-				print(position.round())
 				tweening(position.round(), vector_pos , 0.25)
 			# Crouching
-			if dir.y == 1 && !crouching:
+			if dir.y == 1 && !crouching && !ledge_status && !falling:
 				emit_signal("stance_crouch")
 			elif dir.y == -1 && crouching && !crouch_climb.is_colliding():
-				print(crouching)
 				emit_signal("stance_standing")
 			elif dir.y == -1 && !crouching:
 				if !climb_up_short.is_colliding() && !climb_up.is_colliding():
@@ -142,6 +144,8 @@ func move(dir):
 					tweening(position, vector_pos, 0.25)
 			else:
 				moving = false
+		else:
+			moving = false
 
 
 #Handles Tweening
@@ -165,13 +169,17 @@ func shuffleStep():
 func floorCheck():
 	ground.force_raycast_update()
 	if !ground.is_colliding():
+		climb_up_short.force_raycast_update()
+		if !climb_up_short.is_colliding:
+			print('headbang')
 		if crouching:
-			emit_signal("stance_standing")
+#			emit_signal("stance_standing")
+			if !climb_up_short.is_colliding():
+				emit_signal("stance_standing")
 		falling = true
 		var vector_pos = Vector2(0, 8)
 		var tween = create_tween()
 		var destination = position + vector_pos
-		print()
 		tweening(position, vector_pos, 0.05)
 		tween.tween_property(self, "position", destination, 0.05)
 	else:
@@ -216,6 +224,3 @@ func _on_stance_turn(vector_pos, dir):
 		$Player.flip_h = false
 	turning = false
 	moving = false
-
-
-

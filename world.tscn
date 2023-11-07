@@ -157,10 +157,10 @@ position = Vector2(192, 240)
 position = Vector2(192, 256)
 
 [node name="Wall52" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(176, 240)
+position = Vector2(176, 208)
 
 [node name="Wall53" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(160, 240)
+position = Vector2(160, 208)
 
 [node name="Wall54" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(144, 240)
@@ -178,7 +178,7 @@ position = Vector2(96, 240)
 position = Vector2(208, 256)
 
 [node name="Wall60" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(272, 240)
+position = Vector2(288, 240)
 
 [node name="Wall61" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(224, 176)
@@ -226,10 +226,10 @@ position = Vector2(304, 240)
 position = Vector2(304, 176)
 
 [node name="Wall16" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(192, 208)
+position = Vector2(144, 192)
 
 [node name="Wall17" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(192, 224)
+position = Vector2(256, 208)
 
 [node name="Wall18" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(288, 176)
