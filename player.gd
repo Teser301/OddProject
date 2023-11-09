@@ -16,7 +16,7 @@ signal stance_standing
 var time = 0
 var falling = false
 var jumping = false
-var grid_size = 16
+var grid_size = 64
 var moving = false
 var turning = false
 var crouching = false
@@ -65,17 +65,14 @@ func leapCycle(i):
 	elif i == 0:
 		tween.tween_property(self, "position", destination + Vector2(0,-8), 0.1)
 		i+=1
-		print(i)
 		tween.tween_callback(leapCycle.bind(i))
 	elif i == 1:
 		tween.tween_property(self, "position", destination, 0.1)
 		i+=1
-		print(i)
 		tween.tween_callback(leapCycle.bind(i))
 	elif i == 2:
 		tween.tween_property(self, "position", destination - Vector2(0,-8), 0.1)
 		i+=1
-		print(i)
 		tween.tween_callback(leapCycle.bind(i))
 	else:
 		jumping = false
@@ -88,6 +85,7 @@ func move(dir):
 		# If input is Left or Right
 		if dir.x && !ledge_status:
 			# Make the raycast arrow follow where player is facing
+			print(headray.target_position)
 			if headray.target_position != vector_pos :
 				turning = true
 				_on_stance_turn(vector_pos, dir)
@@ -177,7 +175,7 @@ func floorCheck():
 			if !climb_up_short.is_colliding():
 				emit_signal("stance_standing")
 		falling = true
-		var vector_pos = Vector2(0, 8)
+		var vector_pos = Vector2(0, 1) * (grid_size / 2)
 		var tween = create_tween()
 		var destination = position + vector_pos
 		tweening(position, vector_pos, 0.05)
@@ -191,13 +189,13 @@ func _on_fall_time_timeout():
 
 func _on_stance_crouch():
 	collision.scale = Vector2(1, 0.5)
-	collision.position += Vector2(0, 8)
+	collision.position += Vector2(0, 1) * (grid_size / 2)
 	moving = false
 	crouching = true
 
 func _on_stance_standing():
 	collision.scale = Vector2(1, 1)
-	collision.position = Vector2(8, 16)
+	collision.position -= Vector2(0, 1) * (grid_size / 2)
 	print("standing")
 	moving = false
 	crouching = false

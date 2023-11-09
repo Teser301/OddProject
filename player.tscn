@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bwue20jxnwc08"]
+[gd_scene load_steps=9 format=3 uid="uid://bwue20jxnwc08"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_ap1oi"]
 [ext_resource type="Texture2D" uid="uid://rku5uroy3l25" path="res://Abetest.png" id="2_olj2d"]
@@ -34,14 +34,18 @@ tracks/0/keys = {
 "values": [0, 3, 0]
 }
 
+[sub_resource type="Animation" id="Animation_gcp5v"]
+resource_name = "crouch"
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xlxrv"]
 _data = {
 "RESET": SubResource("Animation_y1p8e"),
+"crouch": SubResource("Animation_gcp5v"),
 "walk": SubResource("Animation_sh3hq")
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pb8hu"]
-size = Vector2(16, 32)
+size = Vector2(64, 128)
 
 [sub_resource type="GDScript" id="GDScript_iyrd4"]
 script/source = "extends CollisionShape2D
@@ -61,7 +65,7 @@ func _on_character_body_2d_pizza(moving):
 script = ExtResource("1_ap1oi")
 
 [node name="Player" type="Sprite2D" parent="."]
-scale = Vector2(0.222222, 0.615385)
+scale = Vector2(0.888889, 2.46154)
 texture = ExtResource("2_olj2d")
 centered = false
 hframes = 4
@@ -72,36 +76,31 @@ libraries = {
 }
 
 [node name="ClimbCheck2" type="RayCast2D" parent="."]
-visible = false
-position = Vector2(8, 8)
-target_position = Vector2(0, -16)
+position = Vector2(32, 32)
+target_position = Vector2(0, -64)
 
 [node name="ClimbCheck" type="RayCast2D" parent="."]
-visible = false
-position = Vector2(8, 8)
-target_position = Vector2(0, -32)
+position = Vector2(32, 32)
+target_position = Vector2(0, -128)
 
 [node name="CrouchClimb" type="RayCast2D" parent="."]
-visible = false
-position = Vector2(8, 24)
+position = Vector2(32, 32)
 target_position = Vector2(0, -16)
 
 [node name="HeadCheck" type="RayCast2D" parent="."]
-visible = false
-position = Vector2(8, 8)
-target_position = Vector2(16, 0)
+position = Vector2(32, 32)
+target_position = Vector2(64, 0)
 
 [node name="LegCheck" type="RayCast2D" parent="."]
-visible = false
-position = Vector2(8, 24)
-target_position = Vector2(16, 0)
+position = Vector2(32, 96)
+target_position = Vector2(64, 0)
 
 [node name="GroundCheck" type="RayCast2D" parent="."]
-position = Vector2(8, 24)
-target_position = Vector2(0, 8)
+position = Vector2(32, 112)
+target_position = Vector2(0, 16)
 
 [node name="playerCollision" type="CollisionShape2D" parent="."]
-position = Vector2(8, 16)
+position = Vector2(32, 64)
 shape = SubResource("RectangleShape2D_pb8hu")
 script = SubResource("GDScript_iyrd4")
 
