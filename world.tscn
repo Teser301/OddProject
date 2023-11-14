@@ -6,73 +6,41 @@
 [ext_resource type="Script" path="res://debug.gd" id="3_khntl"]
 
 [node name="World" type="Node2D"]
-position = Vector2(0, -288)
 
 [node name="Background Reference" type="Sprite2D" parent="."]
+visible = false
 position = Vector2(352, 24)
 scale = Vector2(1.1, 1.1)
 texture = ExtResource("1_sc200")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(0, -192)
+position = Vector2(0, -480)
 anchor_mode = 0
 ignore_rotation = false
 zoom = Vector2(1.5, 1.5)
 
-[node name="Wall10" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(544, 208)
-
-[node name="Wall10" parent="Wall10" instance=ExtResource("2_rl04t")]
-position = Vector2(64, 0)
-
-[node name="Wall10" parent="Wall10/Wall10" instance=ExtResource("2_rl04t")]
-position = Vector2(64, 0)
-
-[node name="Wall10" parent="Wall10/Wall10/Wall10" instance=ExtResource("2_rl04t")]
-position = Vector2(0, -64)
-
-[node name="Wall10" parent="Wall10/Wall10/Wall10/Wall10" instance=ExtResource("2_rl04t")]
-position = Vector2(0, -64)
-
-[node name="Wall9" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(480, 208)
-
-[node name="Wall9" parent="Wall9" instance=ExtResource("2_rl04t")]
-position = Vector2(-128, -272)
-
-[node name="Wall8" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(416, 208)
-
-[node name="Wall7" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(352, 208)
-
-[node name="Wall6" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(288, 208)
-
-[node name="Wall5" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(224, 208)
-
-[node name="Wall4" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(160, 208)
-
-[node name="Wall3" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(96, 208)
-
 [node name="Wall" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(-32, 208)
+position = Vector2(384, -32)
+
+[node name="Wall5" parent="Wall" instance=ExtResource("2_rl04t")]
+position = Vector2(-256, -256)
+
+[node name="Wall5" parent="Wall/Wall5" instance=ExtResource("2_rl04t")]
+position = Vector2(256, 16)
 
 [node name="debug" type="Button" parent="."]
-offset_left = 512.0
-offset_top = -160.0
-offset_right = 608.0
-offset_bottom = -112.0
+offset_left = 736.0
+offset_top = -464.0
+offset_right = 832.0
+offset_bottom = -416.0
 text = "RESET"
 script = ExtResource("3_khntl")
+metadata/_edit_use_anchors_ = true
 
 [node name="Wall2" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(32, 208)
+position = Vector2(128, -32)
 
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(32, 80)
+position = Vector2(64, -192)
 
 [connection signal="pressed" from="debug" to="Player" method="_on_debug_pressed"]

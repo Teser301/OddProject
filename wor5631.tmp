@@ -1,0 +1,85 @@
+[gd_scene load_steps=5 format=3 uid="uid://dgbfxtmkkgqsi"]
+
+[ext_resource type="Texture2D" uid="uid://b4ungpp3u51dv" path="res://Untitled.jpg" id="1_sc200"]
+[ext_resource type="PackedScene" uid="uid://bwue20jxnwc08" path="res://player.tscn" id="1_vvtwi"]
+[ext_resource type="PackedScene" uid="uid://bpofpm7n0o5js" path="res://wall.tscn" id="2_rl04t"]
+[ext_resource type="Script" path="res://debug.gd" id="3_khntl"]
+
+[node name="World" type="Node2D"]
+position = Vector2(0, -288)
+
+[node name="Background Reference" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(352, 24)
+scale = Vector2(1.1, 1.1)
+texture = ExtResource("1_sc200")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, -192)
+anchor_mode = 0
+ignore_rotation = false
+zoom = Vector2(1.5, 1.5)
+
+[node name="Wall10" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(576, 240)
+
+[node name="Wall10" parent="Wall10" instance=ExtResource("2_rl04t")]
+position = Vector2(64, 0)
+
+[node name="Wall10" parent="Wall10/Wall10" instance=ExtResource("2_rl04t")]
+position = Vector2(64, 0)
+
+[node name="Wall10" parent="Wall10/Wall10/Wall10" instance=ExtResource("2_rl04t")]
+position = Vector2(0, -64)
+
+[node name="Wall10" parent="Wall10/Wall10/Wall10/Wall10" instance=ExtResource("2_rl04t")]
+position = Vector2(0, -64)
+
+[node name="Wall9" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(512, 240)
+
+[node name="Wall9" parent="Wall9" instance=ExtResource("2_rl04t")]
+position = Vector2(-384, -192)
+
+[node name="Wall9" parent="Wall9/Wall9" instance=ExtResource("2_rl04t")]
+position = Vector2(64, -64)
+
+[node name="Wall9" parent="Wall9/Wall9/Wall9" instance=ExtResource("2_rl04t")]
+position = Vector2(64, -64)
+
+[node name="Wall8" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(448, 240)
+
+[node name="Wall7" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(384, 240)
+
+[node name="Wall6" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(320, 240)
+
+[node name="Wall5" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(256, 240)
+
+[node name="Wall4" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(192, 240)
+
+[node name="Wall3" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(128, 240)
+
+[node name="Wall" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(0, 240)
+
+[node name="debug" type="Button" parent="."]
+offset_left = 512.0
+offset_top = -160.0
+offset_right = 608.0
+offset_bottom = -112.0
+text = "RESET"
+script = ExtResource("3_khntl")
+
+[node name="Wall2" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(64, 240)
+
+[node name="Player" parent="." instance=ExtResource("1_vvtwi")]
+position = Vector2(32, 80)
+
+[connection signal="pressed" from="debug" to="Player" method="_on_debug_pressed"]

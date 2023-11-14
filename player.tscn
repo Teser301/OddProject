@@ -18,6 +18,9 @@ tracks/0/keys = {
 "values": [0]
 }
 
+[sub_resource type="Animation" id="Animation_gcp5v"]
+resource_name = "crouch"
+
 [sub_resource type="Animation" id="Animation_sh3hq"]
 resource_name = "walk"
 length = 0.25
@@ -33,9 +36,6 @@ tracks/0/keys = {
 "update": 1,
 "values": [0, 3, 0]
 }
-
-[sub_resource type="Animation" id="Animation_gcp5v"]
-resource_name = "crouch"
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_xlxrv"]
 _data = {
@@ -75,13 +75,9 @@ libraries = {
 "": SubResource("AnimationLibrary_xlxrv")
 }
 
-[node name="ClimbCheck2" type="RayCast2D" parent="."]
+[node name="ClimbReach" type="RayCast2D" parent="."]
 position = Vector2(32, 32)
 target_position = Vector2(0, -64)
-
-[node name="ClimbCheck" type="RayCast2D" parent="."]
-position = Vector2(32, 32)
-target_position = Vector2(0, -128)
 
 [node name="CrouchClimb" type="RayCast2D" parent="."]
 position = Vector2(32, 32)
