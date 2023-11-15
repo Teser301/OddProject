@@ -18,41 +18,14 @@ position = Vector2(0, -768)
 anchor_mode = 0
 ignore_rotation = false
 
-[node name="Wall18" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(1152, -448)
-
-[node name="Wall17" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(832, -448)
-
-[node name="Wall16" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(448, -448)
-
-[node name="Wall15" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(128, -448)
-
-[node name="Wall14" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(128, -768)
-rotation = -3.14159
-
-[node name="Wall12" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(1152, -704)
-
-[node name="Wall13" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(1280, -384)
-rotation = -1.5708
-
-[node name="Wall11" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(0, -384)
-rotation = 1.5708
-
 [node name="Wall8" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(128, -192)
+position = Vector2(640, -192)
 
 [node name="Wall10" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(1152, -192)
+position = Vector2(1024, -320)
 
 [node name="Wall5" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(640, -128)
+position = Vector2(832, -256)
 
 [node name="Wall9" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(1152, 0)
@@ -66,19 +39,19 @@ position = Vector2(640, 0)
 [node name="Wall" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(384, 0)
 
-[node name="Wall2" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(128, 0)
-
 [node name="debug" type="Button" parent="."]
-offset_left = 576.0
-offset_top = -704.0
-offset_right = 672.0
-offset_bottom = -656.0
+offset_left = 736.0
+offset_top = -464.0
+offset_right = 832.0
+offset_bottom = -416.0
 text = "RESET"
 script = ExtResource("3_khntl")
 metadata/_edit_use_anchors_ = true
 
+[node name="Wall2" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(128, 0)
+
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(576, -320)
+position = Vector2(64, -256)
 
 [connection signal="pressed" from="debug" to="Player" method="_on_debug_pressed"]

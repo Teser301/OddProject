@@ -8,28 +8,29 @@ size = Vector2(256, 64)
 [node name="StaticBody2D" type="StaticBody2D"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
 shape = SubResource("RectangleShape2D_1hgkm")
 
 [node name="Wall2" type="Sprite2D" parent="."]
-position = Vector2(64, -32)
+position = Vector2(64, -64)
 scale = Vector2(4, 4)
 texture = ExtResource("1_hb357")
 centered = false
 
 [node name="Wall3" type="Sprite2D" parent="."]
-position = Vector2(-128, -32)
+position = Vector2(-128, -64)
 scale = Vector2(4, 4)
 texture = ExtResource("1_hb357")
 centered = false
 
 [node name="Wall" type="Sprite2D" parent="."]
-position = Vector2(-64, -32)
+position = Vector2(-64, -64)
 scale = Vector2(4, 4)
 texture = ExtResource("1_hb357")
 centered = false
 
 [node name="Wall4" type="Sprite2D" parent="."]
-position = Vector2(0, -32)
+position = Vector2(0, -64)
 scale = Vector2(4, 4)
 texture = ExtResource("1_hb357")
 centered = false

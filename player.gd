@@ -5,28 +5,31 @@ class_name PlayerController
 @onready var crouch_climb = $CrouchClimb
 @onready var headray = $HeadCheck
 @onready var legray = $LegCheck
-@onready var ground = $GroundCheck
+@onready var ground_check = $GroundCheck
 @onready var collision = $playerCollision
+@onready var jump_time = $JumpTime
 
 signal stance_turn
 signal stance_crouch
 signal stance_standing
 
-var time = 0
 var falling = false
-var jumping = false
+var leaping = false
 var grid_size = 64
 var moving = false
 var turning = false
-var crouching = false
-var crouchHandling = false
+var sprintMode = false
+# Status's (Standing, Crouching, Climbing, Falling, Jumping)
+var crouch_status = false
 var ledge_status = false
-var valid_spacing = [16, 32, 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256, 272, 288, 304, 320]
+var fall_status = true
+var jump_status = false
+
 
 func _physics_process(delta):
 	input()
-	climbCheck()
-
+	floorCheck(delta)
+	ledgeCheck(delta)
 # Connect the signal to the crouching function
 #Handles key inputs
 func input():
@@ -40,10 +43,88 @@ func input():
 		move(Vector2(1, 0))
 	elif Input.is_action_just_pressed("move_leap"):
 		leap()
-	
+	# Check for sprint key
+	if Input.is_action_pressed("sprint_key"):
+		sprintMode = true
+	else:
+		sprintMode = false
+		
+func move(dir):
+	if dir &&  !moving && !jump_status:
+		moving = true
+		var vector_pos = dir * grid_size
+		# If input is Left or Right
+		if dir.x && !ledge_status && !fall_status :
+			# Make the raycast arrow follow where player is facing
+			if headray.target_position != vector_pos :
+				turning = true
+				_on_stance_turn(vector_pos, dir)
+				return
+			## Check for what is coliding
+			headray.force_raycast_update()
+			legray.force_raycast_update()
+			# Basic movement
+			if !headray.is_colliding() && !legray.is_colliding()  && !turning:
+				if sprintMode:
+					tweening(position, vector_pos, 0.20)
+				else:
+					tweening(position, vector_pos, 0.30)
+				$Player/PlayerAnim.play("walk")
+			# Enable Crouch Mode
+			elif headray.is_colliding() && !legray.is_colliding():
+				print('crotch check')
+				if crouch_status:
+					tweening(position, vector_pos, 0.25)
+				elif !crouch_status:
+					emit_signal("stance_crouch")
+				
+			# In Crouch Mode, move
+			elif headray.is_colliding() && !legray.is_colliding():
+				tweening(position, vector_pos, 0.25)
+			# Vault
+			elif !headray.is_colliding() && legray.is_colliding():
+				vector_pos.y = -grid_size
+				tweening(position, vector_pos, 0.25)
+			# If none of them fit, don't move.
+			else:
+				resetStep()
+		# If input is Up or Down
+		elif dir.y:
+			if dir.y == -1 && crouch_status:
+				emit_signal("stance_standing")
+			elif dir.y == -1 && !ledge_status:
+				print("Jump")
+				velocity.y -= grid_size * 15
+				move_and_slide()
+				moving = false
+				jump_status = true
+			elif dir.y == -1 && ledge_status:
+				print('Climbing')
+				velocity = Vector2(0,0)
+				var tween = get_tree().create_tween()
+				var destination = position + (vector_pos * 3)
+				tween.tween_property(self, "position", destination, 0.25)
+				tween.tween_callback(resetClimb)	
+			elif dir.y == 1 :
+				emit_signal("stance_crouch")
+				moving = false
+			else:
+				resetStep()
+		else:
+			resetStep()
+#	else:
+#		var notTrue = ""
+#		if !dir:
+#			notTrue += "dir is false, "
+#		if falling:
+#			notTrue += "falling is true, "
+#		if moving:
+#			notTrue += "moving is true, "
+#		print("This code wasn't run because " + notTrue)
+		
 func leap():
-	if !falling && !moving && !jumping:
-		jumping = true
+	if !falling && !moving && !leaping:
+		leaping = true
 		var i = 0;
 		var tween = create_tween()
 		var vector_pos = headray.target_position
@@ -60,7 +141,6 @@ func leapCycle(i):
 	var destination = position + vector_pos
 	if headray.is_colliding() or legray.is_colliding():
 		print('Wall')
-		floorCheck()
 	elif i == 0:
 		tween.tween_property(self, "position", destination + Vector2(0,-8), 0.1)
 		i+=1
@@ -74,78 +154,29 @@ func leapCycle(i):
 		i+=1
 		tween.tween_callback(leapCycle.bind(i))
 	else:
-		jumping = false
-		floorCheck()
+		leaping = false
+		print(ledge_status)
 
-func move(dir):
-	if dir && !falling && !moving :
-		moving = true
-		
-		var vector_pos = dir * grid_size
-		# If input is Left or Right
-		if dir.x && !ledge_status:
-			# Make the raycast arrow follow where player is facing
-			if headray.target_position != vector_pos :
-				turning = true
-				_on_stance_turn(vector_pos, dir)
-				return
-			## Check for what is coliding
-			headray.force_raycast_update()
-			legray.force_raycast_update()
-			# Basic movement
-			if !headray.is_colliding() && !legray.is_colliding()  && !turning && !ledge_status:
-				tweening(position, vector_pos, 0.25)
-				
-				$Player/PlayerAnim.play("walk")
-				
-			# Enable Crouch Mode
-			elif headray.is_colliding() && !legray.is_colliding() && !crouching:
-				emit_signal("stance_crouch")
-			# In Crouch Mode, move
-			elif headray.is_colliding() && !legray.is_colliding() && crouching:
-				tweening(position, vector_pos, 0.25)
-			# Vault
-			elif !headray.is_colliding() && legray.is_colliding():
-				vector_pos.y = -grid_size
-				tweening(position, vector_pos, 0.25)
-			# If none of them fit, don't move.
-			else:
-				moving = false
-			# If input is Up or Down
-		elif dir.y:
-			if dir.y == -1:
-				tweening(position.round(), vector_pos , 0.15)
-				moving = false
-				climbCheck()
-#			# Climbing
-			if dir.y == -1 && ledge_status:
-				tweening(position.round(), vector_pos * 3 , 0.15)
-				moving = false
-				ledge_status = false
-				print("stop climbing")
-#			# Crouching
-#			if dir.y == 1 && !crouching && !ledge_status && !falling:
-#				emit_signal("stance_crouch")
-#			elif dir.y == -1 && crouching && !crouch_climb.is_colliding():
-#				emit_signal("stance_standing")
-#			elif dir.y == -1 && !crouching:
-#				if !climb_up_short.is_colliding() && !climb_up.is_colliding():
-#					vector_pos.y -= grid_size
-#					tweening(position, vector_pos, 0.25)
-#			else:
-#				moving = false
-		else:
-			moving = false
+func ledgeCheck(delta):
 
-func climbCheck():
-	if climb_reach.is_colliding() && !ledge_status:
-		print("we hit")
+	if climb_reach.is_colliding() && jump_status && !ledge_status:
 		ledge_status = true
-		var testNode = climb_reach.get_collider()
-		var a = Vector2(0,0)
-#		a.y += testNode.get_position().y + (64 * 3)
-#		position.y += a.y
+		jump_status = false
+		var ledge_object = climb_reach.get_collider()
+		position.y = ledge_object.position.y
+		print('lathcing')
 		
+func floorCheck(delta):
+	if !ledge_status:
+		if ground_check.is_colliding():
+			fall_status = false
+		else:
+			fall_status = true
+			print('fallin')
+		velocity.y += 64
+		move_and_slide()
+		
+
 #Handles Tweening
 func tweening(position, vector_pos, duration):
 	var tween = get_tree().create_tween()
@@ -155,60 +186,42 @@ func tweening(position, vector_pos, duration):
 	else:
 		tween.tween_property(self, "position", destination, 0.25)
 	position = destination
-	tween.tween_callback(shuffleStep)
-	
-#Callback for if moving
-func shuffleStep():
-	if !ledge_status:
-		floorCheck()
+	tween.tween_callback(resetStep)
+
+#Use this func to ensure the character waits before each step
+func resetStep():
 	moving = false
-	jumping = false
-#Handles Falling
-func floorCheck():
-	ground.force_raycast_update()
-	if !ground.is_colliding():
-		climb_reach.force_raycast_update()
-		if !climb_reach.is_colliding:
-			print('headbang')
-		if crouching:
-#			emit_signal("stance_standing")
-			if !climb_reach.is_colliding():
-				emit_signal("stance_standing")
-		falling = true
-		var vector_pos = Vector2(0, 1) * (grid_size)
-		var tween = create_tween()
-		var destination = position + vector_pos
-		tweening(position, vector_pos, 0.15)
-	else:
-		falling = false
-		jumping = false
-#Timer for falling
-func _on_fall_time_timeout():
-	floorCheck()
+func resetClimb():
+	ledge_status = false
+	jump_status = false
+	moving = false
 
 func _on_stance_crouch():
 	collision.scale = Vector2(1, 0.5)
 	collision.position += Vector2(0, 1) * (grid_size / 2)
+	crouch_status = true
 	moving = false
-	crouching = true
+	print("Add Timer to delay this for animation")
 
 func _on_stance_standing():
 	collision.scale = Vector2(1, 1)
 	collision.position -= Vector2(0, 1) * (grid_size / 2)
-	print("standing")
+	crouch_status = false
 	moving = false
-	crouching = false
+	print("standing")
 	
 func _on_debug_pressed():
 	falling = false
-	jumping = false
+	leaping = false
 	moving = false
 	turning = false
-	crouching = false
-	crouchHandling = false
-	ledge_status = false
-	position = Vector2(32, 80)
+	sprintMode = false
+	jump_status = false
+	fall_status = true
+	#Hard set position and scale back to standing
+	position = Vector2(576,-320)
 	collision.scale = Vector2(1, 1)
+	collision.position = Vector2(32,64)
 
 func _on_stance_turn(vector_pos, dir):
 	await get_tree().create_timer(0.15).timeout
