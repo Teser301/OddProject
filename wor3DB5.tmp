@@ -18,26 +18,56 @@ position = Vector2(0, -768)
 anchor_mode = 0
 ignore_rotation = false
 
+[node name="Wall18" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(1152, -448)
+
+[node name="Wall17" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(832, -448)
+
+[node name="Wall16" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(512, -448)
+
+[node name="Wall15" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(128, -448)
+
+[node name="Wall14" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(128, -768)
+rotation = -3.14159
+
+[node name="Wall12" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(1152, -704)
+
+[node name="Wall13" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(1280, -384)
+rotation = -1.5708
+
+[node name="Wall11" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(0, -384)
+rotation = 1.5708
+
+[node name="Wall8" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(128, -192)
+
+[node name="Wall10" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(1152, -192)
+
+[node name="Wall5" parent="." instance=ExtResource("2_rl04t")]
+position = Vector2(640, -320)
+
 [node name="Wall9" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(864, -32)
-
-[node name="Wall9" parent="Wall9" instance=ExtResource("2_rl04t")]
-position = Vector2(192, 0)
-
-[node name="Wall9" parent="Wall9/Wall9" instance=ExtResource("2_rl04t")]
-position = Vector2(192, 0)
+position = Vector2(1152, 0)
 
 [node name="Wall6" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(672, -32)
+position = Vector2(896, 0)
 
 [node name="Wall7" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(480, -32)
+position = Vector2(640, 0)
 
 [node name="Wall" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(288, -32)
+position = Vector2(384, 0)
 
 [node name="Wall2" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(96, -32)
+position = Vector2(128, 0)
 
 [node name="debug" type="Button" parent="."]
 offset_left = 576.0
@@ -49,7 +79,6 @@ script = ExtResource("3_khntl")
 metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(0, -192)
+position = Vector2(576, -320)
 
 [connection signal="pressed" from="debug" to="Player" method="_on_debug_pressed"]
-[connection signal="movement_completed" from="Player" to="Player" method="_on_movement_completed"]

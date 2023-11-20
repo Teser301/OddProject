@@ -62,7 +62,6 @@ func _on_character_body_2d_pizza(moving):
 "
 
 [node name="PlayerModule" type="CharacterBody2D"]
-position = Vector2(-32, 0)
 script = ExtResource("1_ap1oi")
 
 [node name="Player" type="Sprite2D" parent="."]
@@ -101,10 +100,9 @@ script = SubResource("GDScript_iyrd4")
 position = Vector2(32, 112)
 target_position = Vector2(0, 17)
 
-[node name="ActionTimer" type="Timer" parent="."]
-one_shot = true
+[node name="JumpTime" type="Timer" parent="."]
 
 [connection signal="stance_crouch" from="." to="." method="_on_stance_crouch"]
 [connection signal="stance_standing" from="." to="." method="_on_stance_standing"]
 [connection signal="stance_turn" from="." to="." method="_on_stance_turn"]
-[connection signal="timeout" from="ActionTimer" to="." method="_on_action_timer_timeout"]
+[connection signal="timeout" from="JumpTime" to="." method="_on_jump_time_timeout"]
