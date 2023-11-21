@@ -45,7 +45,7 @@ _data = {
 }
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pb8hu"]
-size = Vector2(64, 128)
+size = Vector2(32, 128)
 
 [sub_resource type="GDScript" id="GDScript_iyrd4"]
 script/source = "extends CollisionShape2D
@@ -102,6 +102,7 @@ position = Vector2(32, 112)
 target_position = Vector2(0, 17)
 
 [node name="ActionTimer" type="Timer" parent="."]
+wait_time = 0.1
 one_shot = true
 
 [connection signal="stance_crouch" from="." to="." method="_on_stance_crouch"]

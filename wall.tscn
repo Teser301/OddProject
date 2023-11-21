@@ -1,29 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://bpofpm7n0o5js"]
+[gd_scene load_steps=3 format=3 uid="uid://bmcqxkmtakmvy"]
 
 [ext_resource type="Texture2D" uid="uid://dnqwnaoulwcam" path="res://wall.jpg" id="1_hb357"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1hgkm"]
-size = Vector2(192, 128)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yhox0"]
+size = Vector2(64, 384)
 
-[node name="StaticBody2D" type="StaticBody2D"]
+[node name="Wall" type="StaticBody2D"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 scale = Vector2(1, 0.5)
-shape = SubResource("RectangleShape2D_1hgkm")
+shape = SubResource("RectangleShape2D_yhox0")
+
+[node name="Wall7" type="Sprite2D" parent="."]
+position = Vector2(-32, -96)
+scale = Vector2(4, 4)
+texture = ExtResource("1_hb357")
+centered = false
+
+[node name="Wall7" type="Sprite2D" parent="Wall7"]
+position = Vector2(0, 32)
+texture = ExtResource("1_hb357")
+centered = false
 
 [node name="Wall6" type="Sprite2D" parent="."]
-position = Vector2(-96, -32)
-scale = Vector2(4, 4)
-texture = ExtResource("1_hb357")
-centered = false
-
-[node name="Wall2" type="Sprite2D" parent="."]
-position = Vector2(32, -32)
-scale = Vector2(4, 4)
-texture = ExtResource("1_hb357")
-centered = false
-
-[node name="Wall4" type="Sprite2D" parent="."]
 position = Vector2(-32, -32)
 scale = Vector2(4, 4)
 texture = ExtResource("1_hb357")
