@@ -1,6 +1,7 @@
 extends CharacterBody2D
 class_name PlayerController
 
+
 @onready var climb_reach = $ClimbReach
 @onready var crouch_climb = $CrouchClimb
 @onready var headray = $HeadCheck
@@ -15,7 +16,6 @@ signal stance_standing
 signal movement_completed
 
 var falling = false
-var leaping = false
 var grid_size = 64
 var moving = false
 var movement_status = false
@@ -30,6 +30,8 @@ var crouch_status = false
 var ledge_status = false
 var fall_status = true
 var jump_status = false
+var leap_status = false
+var leaping = false
 var climbing_status = false
 
 var cur_move = Vector2(0,0)
@@ -40,9 +42,12 @@ var current_pos = Vector2(0,0)
 var status_check = false
 
 var direction = Vector2(0,0)
-var distanceToTravel = 0
+var distanceToTravel = Vector2(0,0)
 var travelDestination = 0
 var travelCounter = 0
+
+var distanceToLeap = Vector2(0,0)
+
 
 func _physics_process(delta):
 	input()
@@ -58,15 +63,22 @@ func input():
 		move(Vector2(0, -1))
 	elif Input.is_action_just_pressed("move_down"):
 		move(Vector2(0, 1))
-	elif Input.is_action_pressed("move_left"):
-		move(Vector2(-1, 0))
-	elif Input.is_action_pressed("move_right"):
-		move(Vector2(1, 0))
+
 	if Input.is_action_pressed("sprint_key"):
 		sprintMode = true
 	else:
 		sprintMode = false
+	if Input.is_action_just_pressed("move_leap"):
+		leap()
 		
+	if Input.is_action_just_pressed("move_right"):
+		move(Vector2(1, 0))
+		moving = true
+	elif Input.is_action_just_pressed("move_left"):
+		move(Vector2(-1, 0))
+		moving = true
+	if Input.is_action_just_released("move_right") or Input.is_action_just_released("move_left"):
+		moving = false
 		
 #Remember. Move * Time = 64 or 128
 var movement = 4
@@ -74,18 +86,19 @@ var movementSprint = movement * 2
 var movementTime = 16
 
 func move(dir):
+	print(dir)
 	if !movement_status :
 		if dir.x:
 			direction = dir
-			if headray.target_position != (direction * 64):
+			if sign(headray.target_position.x) != direction.x:
 				turning = true
+				print(turning)
 			else:
-				moving = true
+#				moving = true
 				if sprintMode:
 					distanceToTravel = direction * movementSprint
 				else:
 					distanceToTravel = direction * movement
-				travelDestination = position + distanceToTravel
 		elif dir.y:
 			if !ledge_status:
 				jump_status = true
@@ -93,42 +106,82 @@ func move(dir):
 				print('going up or down')
 				direction = dir
 				distanceToTravel = direction * movementSprint
-				travelDestination = position + distanceToTravel
 			if ledge_status:
 				print('climbing')
 				climbing_status = true
-		
+
+func leap():
+	leaping = true
+	distanceToLeap = Vector2(sign(headray.target_position.x),sign(headray.target_position.x)) * 8
 func inMotion(delta):
 	# Check if user is in motion and if movement is already occuring.
 	# If player holds button, first value will always be true
 	# Second value must be false in order to maintain order.
-	if moving && !movement_status:
+	#Moving
+	if moving && !movement_status && !turn_status:
 		movement_status = true
-	if turning && !turn_status:
-		turn_status = true
-	# While its true, check the steps
-	if turn_status:
-		if travelCounter == 8:
-			headray.target_position = headray.target_position * -1
-			legray.target_position = legray.target_position * -1
-			if direction.x == -1:
-				$Player.flip_h = true
-			else:
-				$Player.flip_h = false
+	#Leaping
+	if leaping && !moving && !leap_status && !turn_status && !movement_status:
+		leap_status = true
+	else:
+		leaping = false
+		
+	if leap_status:
+		leaping = false
+		if headray.is_colliding() && leap_status && travelCounter <= 15:
+			print('ouch')
+			position = Vector2(round(position.x / 64) * 64, round(position.y / 64) * 64)
+			travelCounter = 16
+		elif travelCounter == 16:
 			emit_signal("movement_completed")
+			emit_signal("the_signal")
+		elif travelCounter >= 8:
+			travelCounter +=1
+			position.x += distanceToLeap.x * 1.5
+			position.y += abs(distanceToLeap.y) 
 		else:
-			travelCounter += 1
+			travelCounter +=1
+			position.x += distanceToLeap.x * 1.5
+			position.y -= abs(distanceToLeap.y) 
+	# While its true, check the steps
+		
 	if movement_status:
-		if travelCounter == 16:
-			# Ensuring that if player collides with an object. They are re-centered incase of discrepency
-			if headray.is_colliding() && (headray.target_position / 64) == direction:
-				position = Vector2(round(position.x / 64) * 64, round(position.y / 64) * 64)
-				print(position)
-			emit_signal("movement_completed")
-		else: 
-			travelCounter += 1
-			position += distanceToTravel
-			$Player/PlayerAnim.play("walk")
+		# Orientate the player if facing wrong direction. Takes a turn
+		if turning:
+			print('Turn')
+			
+			if travelCounter == 8:
+				headray.target_position = headray.target_position * -1
+				legray.target_position = legray.target_position * -1
+				if direction.x == -1:
+					$Player.flip_h = true
+				else:
+					$Player.flip_h = false
+				print('turning')
+				emit_signal("movement_completed")
+			else:
+				travelCounter += 1
+		#If player is not facing wrong way, begin travel to move
+		else:
+#			print("Move")
+			if travelCounter == 16:
+				# Ensuring that if player collides with an object. They are re-centered incase of discrepency
+				if headray.is_colliding() && (headray.target_position / 64) == direction:
+					position = Vector2(round(position.x / 64) * 64, round(position.y / 64) * 64)
+				emit_signal("movement_completed")
+			else: 
+				travelCounter += 1
+				if sprintMode:
+					print('rin')
+					if leaping:
+						print('sprint leap')
+				#if colliding with wall or direction is Y. Skip walk animation/Prevent walking into wall
+				if !headray.is_colliding() && !direction.y:
+					position += distanceToTravel
+					$Player/PlayerAnim.play("walk")
+				elif direction.y:
+					position += distanceToTravel
+				
 		
 	if climb_reach.is_colliding() && jump_status && !ledge_status:
 		print('ledged')
@@ -138,78 +191,26 @@ func inMotion(delta):
 		position +=  direction * grid_size * 2
 		climbing_status = false
 		ledge_status = false
+
 func _on_movement_completed():
 	# Handle any additional logic that should occur after movement completes
-	moving = false
 	movement_status = false
 	turning = false
 	turn_status = false
-	jump_status = false
 	travelCounter = 0
-
-func leap():
-	if !falling && !moving:
-		leaping = true
-		var i = 0;
-	if headray.is_colliding() or legray.is_colliding():
-		print('Wall')
-	else:
-		print("Jump")
-		velocity.x = grid_size * 5
-		velocity.y = -grid_size * 5
-		print(velocity)
-		leaping = false
-#		leapCycle(i)
-
-func leapCycle(i):
-	var tween
-	if i <= 4:
-		tween = create_tween()
-	#Lets first get the direction
-	var vector_pos = headray.target_position
-	#This dictates the X direction
-	var destination = position + vector_pos
-	if headray.is_colliding() or legray.is_colliding():
-		print('Wall')
-	else:
-		print("Jump")
-		leaping = false
-#	elif i == 0:
-#		tween.tween_property(self, "position", destination - Vector2(0, 32), 0.3)
-#		i+=1
-#		tween.tween_callback(leapCycle.bind(i))
-#	elif i == 1:
-#		tween.tween_property(self, "position", destination - Vector2(0, 32), 0.3)
-#		i+=1
-#		tween.tween_callback(leapCycle.bind(i))
-#	elif i == 2:
-#		tween.tween_property(self, "position", destination - Vector2(0, 32), 0.3)
-#		i+=1
-#		tween.tween_callback(leapCycle.bind(i))
-#	elif i == 3:
-#		tween.tween_property(self, "position", destination + Vector2(0, 32), 0.3)
-#		i+=1
-#		tween.tween_callback(leapCycle.bind(i))
-#	elif i == 4:
-#		tween.tween_property(self, "position", destination + Vector2(0, 32), 0.3)
-#		i+=1
-#		tween.tween_callback(leapCycle.bind(i))
-
-#	else:
-#		leaping = false
-#		print(ledge_status)
+	leap_status = false
+	jump_status = false
 
 func ledgeCheck(delta):
-
 	if climb_reach.is_colliding() && jump_status && !ledge_status && leaping:
 		ledge_status = true
 		jump_status = false
 		var ledge_object = climb_reach.get_collider()
 		position.y = ledge_object.position.y
 		print('lathcing')
-		
+
 func floorCheck(delta):
-	if !ledge_status && !leaping && !jump_status:
+	if !ledge_status && !jump_status && !leap_status:
 		if ground_check.is_colliding():
 			fall_status = false
 		else:
@@ -217,26 +218,8 @@ func floorCheck(delta):
 		if crouch_status && fall_status:
 			emit_signal("stance_standing")
 		velocity.y += 64
-		
-
-#Handles Tweening
-func tweening(position, vector_pos, duration):
-	var tween = get_tree().create_tween()
-	var destination = position + vector_pos
-	if duration:
-		tween.tween_property(self, "position", destination, duration)
-	else:
-		tween.tween_property(self, "position", destination, 0.25)
-	tween.tween_callback(resetStep)
 
 #Use this func to ensure the character waits before each step
-func resetStep():
-	moving = false
-func resetClimb():
-	ledge_status = false
-	jump_status = false
-	moving = false
-
 func _on_stance_crouch():
 	collision.scale = Vector2(1, 0.5)
 	collision.position += Vector2(0, 1) * (grid_size / 2)
@@ -264,15 +247,5 @@ func _on_debug_pressed():
 	collision.scale = Vector2(1, 1)
 	collision.position = Vector2(32,64)
 
-func _on_stance_turn(dir):
-	await get_tree().create_timer(0.15).timeout
-	headray.target_position = headray.target_position * -1
-	legray.target_position = legray.target_position * -1
-	if dir.x == -1:
-		$Player.flip_h = true
-	else:
-		$Player.flip_h = false
-	turning = false
-	moving = false
 
 
