@@ -3,5 +3,3 @@ res://player.gd
 res://player.tscn
 res://floor.tscn
 res://wall.tscn
-res://Debug Tracker.gd
-res://world.gd

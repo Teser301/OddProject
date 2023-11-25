@@ -1,16 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://dgbfxtmkkgqsi"]
+[gd_scene load_steps=5 format=3 uid="uid://dgbfxtmkkgqsi"]
 
 [ext_resource type="Texture2D" uid="uid://b4ungpp3u51dv" path="res://Untitled.jpg" id="1_sc200"]
 [ext_resource type="PackedScene" uid="uid://bwue20jxnwc08" path="res://player.tscn" id="1_vvtwi"]
 [ext_resource type="PackedScene" uid="uid://bmcqxkmtakmvy" path="res://wall.tscn" id="2_rl04t"]
-[ext_resource type="Script" path="res://debug.gd" id="3_khntl"]
 [ext_resource type="PackedScene" uid="uid://df57yeuel5i8d" path="res://floor.tscn" id="3_wr2y0"]
-[ext_resource type="Script" path="res://Debug Tracker.gd" id="6_xs2on"]
-
-[sub_resource type="GDScript" id="GDScript_h55ft"]
 
 [node name="World" type="Node2D"]
-script = SubResource("GDScript_h55ft")
 
 [node name="Background Reference" type="Sprite2D" parent="."]
 visible = false
@@ -27,7 +22,7 @@ ignore_rotation = false
 position = Vector2(1184, -128)
 
 [node name="Wall3" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(1248, -128)
+position = Vector2(608, -160)
 
 [node name="Wall" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(32, -160)
@@ -59,20 +54,10 @@ offset_top = -704.0
 offset_right = 672.0
 offset_bottom = -656.0
 text = "RESET"
-script = ExtResource("3_khntl")
 metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(576, -480)
-
-[node name="DebugTracker" type="RichTextLabel" parent="."]
-offset_left = 64.0
-offset_top = -736.0
-offset_right = 512.0
-offset_bottom = -576.0
-text = "Status tracker"
-script = ExtResource("6_xs2on")
+position = Vector2(576, -384)
 
 [connection signal="pressed" from="debug" to="Player" method="_on_debug_pressed"]
 [connection signal="movement_completed" from="Player" to="Player" method="_on_movement_completed"]
-[connection signal="movement_completed" from="Player" to="DebugTracker" method="_on_player_movement_completed"]
