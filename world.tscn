@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://dgbfxtmkkgqsi"]
+[gd_scene load_steps=6 format=3 uid="uid://dgbfxtmkkgqsi"]
 
 [ext_resource type="Texture2D" uid="uid://b4ungpp3u51dv" path="res://Untitled.jpg" id="1_sc200"]
 [ext_resource type="PackedScene" uid="uid://bwue20jxnwc08" path="res://player.tscn" id="1_vvtwi"]
 [ext_resource type="PackedScene" uid="uid://bmcqxkmtakmvy" path="res://wall.tscn" id="2_rl04t"]
 [ext_resource type="PackedScene" uid="uid://df57yeuel5i8d" path="res://floor.tscn" id="3_wr2y0"]
+[ext_resource type="PackedScene" uid="uid://cxw2fayoe6jr8" path="res://ledge.tscn" id="4_qg3ja"]
 
 [node name="World" type="Node2D"]
 
@@ -22,16 +23,19 @@ ignore_rotation = false
 position = Vector2(1184, -128)
 
 [node name="Wall3" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(608, -160)
+position = Vector2(1248, -128)
 
 [node name="Wall" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(32, -160)
 
-[node name="Floor" parent="." instance=ExtResource("3_wr2y0")]
+[node name="Floor5" parent="." instance=ExtResource("3_wr2y0")]
 position = Vector2(1184, -224)
 
 [node name="Floor1" parent="." instance=ExtResource("3_wr2y0")]
 position = Vector2(1056, -32)
+
+[node name="Ledge" parent="." instance=ExtResource("4_qg3ja")]
+position = Vector2(1984, -256)
 
 [node name="Floor2" parent="." instance=ExtResource("3_wr2y0")]
 position = Vector2(864, -32)

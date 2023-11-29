@@ -76,7 +76,7 @@ target_position = Vector2(32, 0)
 
 [node name="LegCheck" type="RayCast2D" parent="."]
 position = Vector2(32, 96)
-target_position = Vector2(64, 0)
+target_position = Vector2(32, 0)
 
 [node name="playerCollision" type="CollisionShape2D" parent="."]
 position = Vector2(32, 64)

@@ -1,11 +1,11 @@
-RichTextLabel
+CollisionShape2D
 StaticBody2D
+RichTextLabel
 Timer
 AnimationPlayer
 AnimatableBody2D
 RayCast2D
 Button
-CollisionShape2D
 CharacterBody2D
 Camera2D
 Sprite2D
