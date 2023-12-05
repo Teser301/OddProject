@@ -1,18 +1,19 @@
-[gd_scene load_steps=3 format=3 uid="uid://cxw2fayoe6jr8"]
+[gd_scene load_steps=4 format=3 uid="uid://cxw2fayoe6jr8"]
 
+[ext_resource type="Script" path="res://ledge.gd" id="1_x24ba"]
 [ext_resource type="Texture2D" uid="uid://dwfhuw75qqahk" path="res://player.jpg" id="1_xl8mx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rghat"]
 size = Vector2(64, 32)
 
 [node name="Ledge" type="StaticBody2D"]
-position = Vector2(864, -32)
+script = ExtResource("1_x24ba")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-864, 16)
+position = Vector2(32, 16)
 shape = SubResource("RectangleShape2D_rghat")
 
 [node name="Player" type="Sprite2D" parent="."]
-position = Vector2(-864, 16)
+position = Vector2(32, 16)
 scale = Vector2(4, 2)
 texture = ExtResource("1_xl8mx")

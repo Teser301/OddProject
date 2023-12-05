@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bwue20jxnwc08"]
+[gd_scene load_steps=9 format=3 uid="uid://bwue20jxnwc08"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_ap1oi"]
 [ext_resource type="Texture2D" uid="uid://rku5uroy3l25" path="res://Abetest.png" id="2_olj2d"]
@@ -47,6 +47,9 @@ _data = {
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pb8hu"]
 size = Vector2(32, 128)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_skpov"]
+size = Vector2(64, 96)
+
 [node name="PlayerModule" type="CharacterBody2D"]
 position = Vector2(-32, 0)
 script = ExtResource("1_ap1oi")
@@ -89,6 +92,12 @@ target_position = Vector2(0, 17)
 [node name="ActionTimer" type="Timer" parent="."]
 wait_time = 0.1
 one_shot = true
+
+[node name="climbArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="climbArea"]
+position = Vector2(48, 16)
+shape = SubResource("RectangleShape2D_skpov")
 
 [connection signal="stance_crouch" from="." to="." method="_on_stance_crouch"]
 [connection signal="stance_standing" from="." to="." method="_on_stance_standing"]

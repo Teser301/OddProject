@@ -3,6 +3,7 @@ class_name PlayerController
 
 
 @onready var climb_reach = $ClimbReach
+@onready var climb_area = $climbArea
 @onready var crouch_climb = $CrouchClimb
 @onready var headray = $HeadCheck
 @onready var legray = $LegCheck
@@ -36,13 +37,16 @@ var queued_actions: Array = []
 var actionTimer: int = 0
 var actionTime: bool = false
 var action: String
-
-
+var can_crouch = true
+var stop_leap = false
+var sprintJump = false
 func _physics_process(delta):
 	input()
 	inMotion()
 	floorCheck()
 	move_and_slide()
+	
+
 	
 # Connect the signal to the crouching function
 #Handles key inputs
@@ -70,7 +74,9 @@ func input():
 #Remember. Move * Time = 64 or 128
 var movement = 4
 var movementSprint = movement * 2
-var movementTime = 16
+
+# Value decides how long certain actions take. Default 16
+var goalValue = 16
 
 func move(direction):
 	if !movement_status && !leaping :
@@ -86,8 +92,8 @@ func move(direction):
 				distanceToTravel = direction * movement
 		elif direction.y:
 			if direction.y == -1:
-				if !ledge_status && !crouch_status:
-					distanceToJump = direction * 16
+				if !ledge_status && !crouch_status && !fall_status:
+					distanceToJump = direction * 6
 					queued_actions.append("jump_action")
 				elif ledge_status && !crouch_status:
 					queued_actions.append("climbing_action")
@@ -95,17 +101,16 @@ func move(direction):
 					queued_actions.append("stand_action")
 			if direction.y == 1:
 				queued_actions.append("crouch_action")
-	elif !movement_status && leaping:
-		distanceToLeap = Vector2(sign(headray.target_position.x),sign(headray.target_position.x)) * 8
-		queued_actions.append("leap_action")
-
 
 func inMotion():
+	if !movement_status && leaping:
+		distanceToLeap = Vector2(sign(headray.target_position.x),sign(headray.target_position.x)) * 8
+		queued_actions.append("leap_action")
 	if queued_actions.size() > 0:
 		movement_status = true
 	if movement_status:
 		# This is where the loop finishes
-		if actionTimer == 16:
+		if actionTimer == goalValue:
 			#At the moment turning is instant. Will revamp for animation possibly
 			if turning:
 				#Flip to new direction raycast Arrows
@@ -125,25 +130,27 @@ func inMotion():
 			#Based on the input of the code above, activate one of these below
 			#Moving
 			if action == "move_action":
-				if headray.is_colliding():
+				if headray.is_colliding() && legray.is_colliding():
 					print('ouch')
 					position = Vector2(round(position.x / 64) * 64, round(position.y / 64) * 64)
 				else:
 					position += distanceToTravel
 			#Turning
-			if action == "turning_action":
-				pass
+			if action == "turn_action":
+				goalValue = 8
 			#Jumping
 			if action == "jump_action":
 				jump_status = true
 				if !ledge_status:
 					position += distanceToJump
-				if climb_reach.is_colliding() && !ledge_status:
-					var ledge_object = climb_reach.get_collider()
-					if ledge_object.name == "Ledge":
-						ledge_status = true
-						print(ledge_object)
-						position.y = ledge_object.position.y
+#				
+							
+				if climb_reach.is_colliding():
+					var body = climb_reach.get_collider()
+					if body.is_in_group("climbable") && !ledge_status:
+						latching(body)
+						
+				
 					
 			#Climbing after latching from jump
 			if action == "climbing_action":
@@ -152,34 +159,55 @@ func inMotion():
 				latchTween.tween_property(self, "position", destination, 0.3)
 				ledge_status = false
 			#Leaping
-			if action == "leap_action":
+			if action == "leap_action" && !fall_status:
 				leaping = false
 				leap_status = true
-				if headray.is_colliding() && actionTimer <= 15:
+				if sprintMode or sprintJump:
+					sprintJump = true
+					print(sprintJump)
+					if climb_area.get_overlapping_bodies():
+						var bodies = climb_area.get_overlapping_bodies()
+						for body in bodies:
+							if body.is_in_group("climbable") && !ledge_status:
+								stop_leap = true
+								latching(body)
+	
+				if headray.is_colliding() && actionTimer <= 15 && !stop_leap:
 					position = Vector2(round(position.x / 64) * 64, round(position.y / 64) * 64)
-				elif actionTimer >= 8:
+				elif actionTimer >= 8 && !stop_leap:
 					position.x += distanceToLeap.x * 1.5
 					position.y += abs(distanceToLeap.y)
-				else:
+				elif !stop_leap:
 					position.x += distanceToLeap.x * 1.5
 					position.y -= abs(distanceToLeap.y)
 			#Crouching
 			if action == "crouch_action":
-				if !crouch_status:
-					emit_signal("stance_crouch")
-
+				if !ledge_status:
+					if !crouch_status && can_crouch:
+						emit_signal("stance_crouch")
+				else:
+					print('false')
+					ledge_status = false
+					can_crouch = false
 			if action == "stand_action":
 				if crouch_status:
 					emit_signal("stance_standing")
 			actionTimer += 1
 			
+func latching(body):
+	ledge_status = true
+	print(body.position.y)
+	position = body.position
 			
 func _on_movement_completed():
+	jump_status = false
 	movement_status = false
 	turning = false
 	leap_status = false
-	jump_status = false
+	can_crouch = true
 	actionTimer = 0
+	goalValue = 16
+	stop_leap = false
 	print("Movement complete")
 
 func floorCheck():

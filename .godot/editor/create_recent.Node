@@ -1,10 +1,11 @@
 CollisionShape2D
+Area2D
+RayCast2D
 StaticBody2D
 RichTextLabel
 Timer
 AnimationPlayer
 AnimatableBody2D
-RayCast2D
 Button
 CharacterBody2D
 Camera2D

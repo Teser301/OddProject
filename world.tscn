@@ -34,8 +34,14 @@ position = Vector2(1184, -224)
 [node name="Floor1" parent="." instance=ExtResource("3_wr2y0")]
 position = Vector2(1056, -32)
 
+[node name="Floor5t" parent="Floor1" instance=ExtResource("3_wr2y0")]
+position = Vector2(-960, -320)
+
+[node name="Ledge2" parent="." instance=ExtResource("4_qg3ja")]
+position = Vector2(832, -320)
+
 [node name="Ledge" parent="." instance=ExtResource("4_qg3ja")]
-position = Vector2(1984, -256)
+position = Vector2(288, -544)
 
 [node name="Floor2" parent="." instance=ExtResource("3_wr2y0")]
 position = Vector2(864, -32)
@@ -61,7 +67,7 @@ text = "RESET"
 metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(576, -384)
+position = Vector2(0, -512)
 
 [connection signal="pressed" from="debug" to="Player" method="_on_debug_pressed"]
 [connection signal="movement_completed" from="Player" to="Player" method="_on_movement_completed"]
