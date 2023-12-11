@@ -48,7 +48,7 @@ _data = {
 size = Vector2(32, 128)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_skpov"]
-size = Vector2(64, 96)
+size = Vector2(64, 80)
 
 [node name="PlayerModule" type="CharacterBody2D"]
 position = Vector2(-32, 0)
@@ -96,9 +96,10 @@ one_shot = true
 [node name="climbArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="climbArea"]
-position = Vector2(48, 16)
+position = Vector2(48, 24)
 shape = SubResource("RectangleShape2D_skpov")
 
+[connection signal="outMotion" from="." to="." method="_on_out_motion"]
 [connection signal="stance_crouch" from="." to="." method="_on_stance_crouch"]
 [connection signal="stance_standing" from="." to="." method="_on_stance_standing"]
 [connection signal="stance_turn" from="." to="." method="_on_stance_turn"]

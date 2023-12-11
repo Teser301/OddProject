@@ -1,6 +1,9 @@
 extends CharacterBody2D
 class_name PlayerController
 
+#Documenting some movement
+#Leaping is meant to move the player 4 blocks forward
+
 
 @onready var climb_reach = $ClimbReach
 @onready var climb_area = $climbArea
@@ -15,10 +18,12 @@ signal stance_turn
 signal stance_crouch
 signal stance_standing
 signal movement_completed
+signal outMotion
 
 var falling = false
 var grid_size = 64
 var movement_status = false
+var current_start = position
 
 var turning = false
 var sprintMode = false
@@ -40,13 +45,12 @@ var action: String
 var can_crouch = true
 var stop_leap = false
 var sprintJump = false
+var leap_falling = false
 func _physics_process(delta):
 	input()
 	inMotion()
 	floorCheck()
 	move_and_slide()
-	
-
 	
 # Connect the signal to the crouching function
 #Handles key inputs
@@ -57,8 +61,9 @@ func input():
 		sprintMode = false
 		
 	if Input.is_action_pressed("move_leap"):
-		leaping = true
-		move(Vector2(0, 0))
+		if !fall_status:
+			leaping = true
+			move(Vector2(0, 0))
 	elif Input.is_action_pressed("move_right") && Input.is_action_pressed("move_left"):
 		pass
 	elif Input.is_action_pressed("move_down"):
@@ -122,6 +127,7 @@ func inMotion():
 				else:
 					$Player.flip_h = false
 			emit_signal("movement_completed")
+			emit_signal("outMotion")
 		#Actions based on input
 		else:
 			#Start with nothing on 0. Add the action into this loop.
@@ -143,15 +149,11 @@ func inMotion():
 				jump_status = true
 				if !ledge_status:
 					position += distanceToJump
-#				
-							
 				if climb_reach.is_colliding():
 					var body = climb_reach.get_collider()
 					if body.is_in_group("climbable") && !ledge_status:
 						latching(body)
 						
-				
-					
 			#Climbing after latching from jump
 			if action == "climbing_action":
 				var latchTween = get_tree().create_tween()
@@ -159,27 +161,37 @@ func inMotion():
 				latchTween.tween_property(self, "position", destination, 0.3)
 				ledge_status = false
 			#Leaping
-			if action == "leap_action" && !fall_status:
+			if action == "leap_action" :
 				leaping = false
 				leap_status = true
+				goalValue = 32
+				
+				if climb_area.get_overlapping_bodies():
+					var bodies = climb_area.get_overlapping_bodies()
+					for body in bodies:
+						if body.is_in_group("climbable") && !ledge_status:
+							stop_leap = true
+							latching(body)
+#					#Make sure to jump 5 blocks. 1 start, 3 inbetween, 1 end. Hoist on 6 if pos... 4665x3499
+				elif actionTimer >= 16:
+					print('check')
+					leap_status = false
+					if ground_check.is_colliding():
+						print('landed')
+						position.x = round(position.x / 64) * 64
+					else:
+						actionTimer = 17
+						position.x += distanceToLeap.x / 4
+				elif actionTimer >= 8  :
+					position.x += distanceToLeap.x * 1.5
+					position.y += abs(distanceToLeap.y)
+				else:
+					position.x += distanceToLeap.x * 1.5
+					position.y -= abs(distanceToLeap.y)
+					
 				if sprintMode or sprintJump:
 					sprintJump = true
 					print(sprintJump)
-					if climb_area.get_overlapping_bodies():
-						var bodies = climb_area.get_overlapping_bodies()
-						for body in bodies:
-							if body.is_in_group("climbable") && !ledge_status:
-								stop_leap = true
-								latching(body)
-	
-				if headray.is_colliding() && actionTimer <= 15 && !stop_leap:
-					position = Vector2(round(position.x / 64) * 64, round(position.y / 64) * 64)
-				elif actionTimer >= 8 && !stop_leap:
-					position.x += distanceToLeap.x * 1.5
-					position.y += abs(distanceToLeap.y)
-				elif !stop_leap:
-					position.x += distanceToLeap.x * 1.5
-					position.y -= abs(distanceToLeap.y)
 			#Crouching
 			if action == "crouch_action":
 				if !ledge_status:
@@ -201,19 +213,27 @@ func latching(body):
 			
 func _on_movement_completed():
 	jump_status = false
-	movement_status = false
 	turning = false
-	leap_status = false
 	can_crouch = true
+	stop_leap = false
+	leap_status = false
+#	print("Movement complete")
+	
+func _on_out_motion():
+	movement_status = false
 	actionTimer = 0
 	goalValue = 16
-	stop_leap = false
-	print("Movement complete")
+
 
 func floorCheck():
+#	if ground_check.is_colliding() && leap_falling:
+#		leap_falling = false
+#		actionTimer = 16
+#		position = Vector2(round(position.x / 64) * 64, round(position.y / 64) * 64)
 	if !ledge_status && !jump_status && !leap_status:
 		if ground_check.is_colliding():
 			fall_status = false
+			leap_falling = false
 			position.y = round(position.y)
 		else:
 			fall_status = true
@@ -240,9 +260,11 @@ func _on_debug_pressed():
 	jump_status = false
 	fall_status = true
 	#Hard set position and scale back to standing
-	position = Vector2(576,-320)
+	position = Vector2(192,-672)
 	collision.scale = Vector2(1, 1)
 	collision.position = Vector2(32,64)
+
+
 
 
 

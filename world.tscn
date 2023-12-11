@@ -20,7 +20,7 @@ anchor_mode = 0
 ignore_rotation = false
 
 [node name="Wall2" parent="." instance=ExtResource("2_rl04t")]
-position = Vector2(1184, -128)
+position = Vector2(1184, -160)
 
 [node name="Wall3" parent="." instance=ExtResource("2_rl04t")]
 position = Vector2(1248, -128)
@@ -29,25 +29,49 @@ position = Vector2(1248, -128)
 position = Vector2(32, -160)
 
 [node name="Floor5" parent="." instance=ExtResource("3_wr2y0")]
-position = Vector2(1184, -224)
+position = Vector2(1184, -288)
+
+[node name="Floor5t2" parent="." instance=ExtResource("3_wr2y0")]
+position = Vector2(96, -288)
+
+[node name="Floor7" parent="." instance=ExtResource("3_wr2y0")]
+position = Vector2(1184, -352)
+
+[node name="Floor8" parent="." instance=ExtResource("3_wr2y0")]
+position = Vector2(96, -384)
+
+[node name="Floor9" parent="." instance=ExtResource("3_wr2y0")]
+position = Vector2(96, -448)
+
+[node name="Floor10" parent="." instance=ExtResource("3_wr2y0")]
+position = Vector2(96, -256)
+
+[node name="Floor5t3" parent="." instance=ExtResource("3_wr2y0")]
+position = Vector2(608, -64)
+
+[node name="Floor11" parent="." instance=ExtResource("3_wr2y0")]
+position = Vector2(96, -512)
 
 [node name="Floor1" parent="." instance=ExtResource("3_wr2y0")]
-position = Vector2(1056, -32)
+position = Vector2(1120, -32)
 
-[node name="Floor5t" parent="Floor1" instance=ExtResource("3_wr2y0")]
-position = Vector2(-960, -320)
+[node name="Ledge4" parent="." instance=ExtResource("4_qg3ja")]
+position = Vector2(992, -256)
+
+[node name="Ledge3" parent="." instance=ExtResource("4_qg3ja")]
+position = Vector2(704, -256)
 
 [node name="Ledge2" parent="." instance=ExtResource("4_qg3ja")]
-position = Vector2(832, -320)
+position = Vector2(192, -544)
 
 [node name="Ledge" parent="." instance=ExtResource("4_qg3ja")]
-position = Vector2(288, -544)
+position = Vector2(192, -320)
 
 [node name="Floor2" parent="." instance=ExtResource("3_wr2y0")]
-position = Vector2(864, -32)
+position = Vector2(928, -32)
 
 [node name="Floor3" parent="." instance=ExtResource("3_wr2y0")]
-position = Vector2(672, -32)
+position = Vector2(736, -32)
 
 [node name="Floor4" parent="." instance=ExtResource("3_wr2y0")]
 position = Vector2(480, -32)
@@ -67,7 +91,7 @@ text = "RESET"
 metadata/_edit_use_anchors_ = true
 
 [node name="Player" parent="." instance=ExtResource("1_vvtwi")]
-position = Vector2(0, -512)
+position = Vector2(192, -672)
 
 [connection signal="pressed" from="debug" to="Player" method="_on_debug_pressed"]
 [connection signal="movement_completed" from="Player" to="Player" method="_on_movement_completed"]
